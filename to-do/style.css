@@ -11,3 +11,23 @@
     width: 100%;
     align-items: center;
 }
+ul{
+    list-style: none;
+}
+ul li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.5rem;
+}
+ul li p {
+    margin: 0;
+    flex:1;
+}
+ul li i{
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+ul li i:hover{
+    transform: scale(1.2);
+}
