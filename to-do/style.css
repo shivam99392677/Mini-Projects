@@ -31,3 +31,26 @@ ul li i{
 ul li i:hover{
     transform: scale(1.2);
 }
+
+.task-text{
+    margin: 0;
+    display: inline-block;
+}
+.edit-input{
+    padding: 5px;
+    font-size: 1rem;
+    width: 60%;
+}
+.saveBtn{
+    margin-left: 8px;
+    background-color: limegreen;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.saveBtn:hover{
+    transform: scale(1.1);
+}

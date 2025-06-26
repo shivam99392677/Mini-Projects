@@ -47,7 +47,7 @@ function enableEditing(para){
   let input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
-  input.classList.add("edit-input");
+  input.classList.add("edit-input","form-control");
 
   let saveBtn = document.createElement("button");
   saveBtn.innerHTML = "💾";
