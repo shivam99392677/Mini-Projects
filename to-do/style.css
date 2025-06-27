@@ -54,3 +54,15 @@ ul li i:hover{
 .saveBtn:hover{
     transform: scale(1.1);
 }
+.complete{
+    text-decoration: line-through;
+    color: gray;
+    opacity: 0.8;
+}
+.content{
+    height: 50vh;
+    overflow-y: auto;
+}
+.content::-webkit-scrollbar-track{
+    width: 8px;
+}

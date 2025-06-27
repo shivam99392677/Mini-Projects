@@ -25,34 +25,45 @@ function addTask(task) {
   i.classList.add("fa-duotone", "fa-solid", "fa-trash");
 
   para.innerText = task;
-  para.addEventListener("dblclick",function(){
+  para.addEventListener("dblclick", function () {
     enableEditing(para);
   });
+
+
 
   li.appendChild(check);
   li.appendChild(para);
   li.appendChild(i);
-   ul.prepend(li);
+  ul.prepend(li);
   input.value = "";
- 
+
   // Adds task at the top of the list
+  //adding task checkbox toggle
+  check.addEventListener("change",function(){
+    if(check.checked){
+      para.classList.add("complete");
+    }
+    else{
+      para.classList.remove("complete");
+    }
+  })
 }
 
 // enable inline editing on double click
 
-function enableEditing(para){
+function enableEditing(para) {
   const currentText = para.textContent;
 
   //create input and save button
   let input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
-  input.classList.add("edit-input","form-control");
+  input.classList.add("edit-input", "form-control");
 
   let saveBtn = document.createElement("button");
   saveBtn.innerHTML = "💾";
   saveBtn.classList.add("saveBtn");
-  
+
   //accessing the parent list element to edit it
 
   const parent = para.parentNode;
@@ -62,22 +73,22 @@ function enableEditing(para){
   input.focus();
 
   //save on enter button
-  input.addEventListener("keydown",function(e){
-    if(e.key === "Enter"){
-      saveEditedTask(input,saveBtn);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      saveEditedTask(input, saveBtn);
     }
   });
 
   // save on icon click
-  saveBtn.addEventListener("click",()=>{
-    saveEditedTask(input,saveBtn);
+  saveBtn.addEventListener("click", () => {
+    saveEditedTask(input, saveBtn);
   });
 }
 
-function saveEditedTask(input,saveBtn){
+function saveEditedTask(input, saveBtn) {
   const newText = input.value.trim();
 
-  if(newText == ""){
+  if (newText == "") {
     alert("Task cannot be empty!");
     return;
   }
@@ -87,15 +98,14 @@ function saveEditedTask(input,saveBtn){
   para.classList.add("task-text");
 
   //re-add double click event
-  para.addEventListener("dblclick",function(){
+  para.addEventListener("dblclick", function () {
     enableEditing(para);
-  })
+  });
 
   let parent = input.parentNode;
-  parent.insertBefore(para,input);
+  parent.insertBefore(para, input);
   parent.removeChild(input);
   parent.removeChild(saveBtn);
-
 }
 
 // Moves the task to the 'bin' list when 'Mark as Done' is clicked
@@ -124,6 +134,8 @@ document
   .addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       document.querySelector(".btn-success").click();
-      input.value="";
+      // input.value = "";
     }
   });
+
+  
