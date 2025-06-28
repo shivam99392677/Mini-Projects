@@ -1,18 +1,25 @@
+// =====================
+// 📦 ELEMENT REFERENCES
+// =====================
 let btn = document.querySelector(".btn-success");
 let input = document.querySelector(".form-control");
 let ul = document.querySelector(".list-group");
 
+// =====================
+// 🟩 ADD TASK ON BUTTON CLICK
+// =====================
 btn.addEventListener("click", () => {
   if (input.value != "") {
     let cancelBtn = document.createElement("button");
-
     addTask(input.value);
   } else {
     alert("Please enter any task to add.");
   }
 });
 
-// Adds a new task with checkbox to the given list
+// =====================
+// ✅ FUNCTION: Add Task
+// =====================
 function addTask(task) {
   let li = document.createElement("li");
   let para = document.createElement("p");
@@ -29,32 +36,27 @@ function addTask(task) {
     enableEditing(para);
   });
 
-
-
   li.appendChild(check);
   li.appendChild(para);
   li.appendChild(i);
   ul.prepend(li);
   input.value = "";
 
-  // Adds task at the top of the list
-  //adding task checkbox toggle
-  check.addEventListener("change",function(){
-    if(check.checked){
+  // ✅ Checkbox toggle
+  check.addEventListener("change", function () {
+    if (check.checked) {
       para.classList.add("complete");
-    }
-    else{
+    } else {
       para.classList.remove("complete");
     }
-  })
+  });
 }
 
-// enable inline editing on double click
-
+// =====================
+// ✏️ FUNCTION: Enable Editing
+// =====================
 function enableEditing(para) {
   const currentText = para.textContent;
-
-  //create input and save button
   let input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
@@ -64,27 +66,28 @@ function enableEditing(para) {
   saveBtn.innerHTML = "💾";
   saveBtn.classList.add("saveBtn");
 
-  //accessing the parent list element to edit it
-
   const parent = para.parentNode;
   parent.insertBefore(input, para);
   parent.insertBefore(saveBtn, para);
   parent.removeChild(para);
   input.focus();
 
-  //save on enter button
+  // 💾 Save on Enter
   input.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       saveEditedTask(input, saveBtn);
     }
   });
 
-  // save on icon click
+  // 💾 Save on Button Click
   saveBtn.addEventListener("click", () => {
     saveEditedTask(input, saveBtn);
   });
 }
 
+// =====================
+// 💾 FUNCTION: Save Edited Task
+// =====================
 function saveEditedTask(input, saveBtn) {
   const newText = input.value.trim();
 
@@ -97,7 +100,6 @@ function saveEditedTask(input, saveBtn) {
   para.innerText = newText;
   para.classList.add("task-text");
 
-  //re-add double click event
   para.addEventListener("dblclick", function () {
     enableEditing(para);
   });
@@ -108,34 +110,29 @@ function saveEditedTask(input, saveBtn) {
   parent.removeChild(saveBtn);
 }
 
-// Moves the task to the 'bin' list when 'Mark as Done' is clicked
+// =====================
+// 🗑️ DELETE TASK (Move to Bin)
+// =====================
 document.addEventListener("click", (event) => {
   if (event.target.classList.contains("fa-duotone")) {
     let confirmation = confirm("Do you want to Delete task?");
     if (confirmation) {
       let taskItem = event.target.parentElement;
-      let bin = document.querySelector(".bin"); // Target list for completed tasks
-
-      event.target.remove(); // Removes 'Mark as Done' button
-      taskItem.remove(); // Removes the task from the current list
-
+      let bin = document.querySelector(".bin");
+      event.target.remove();
+      taskItem.remove();
       let li = document.createElement("li");
       li.appendChild(taskItem);
-
-      bin.prepend(li); // Moves completed task to top of bin list
+      bin.prepend(li);
     }
   }
 });
 
-//press enter key to add task
-
-document
-  .getElementById("floating-input")
-  .addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      document.querySelector(".btn-success").click();
-      // input.value = "";
-    }
-  });
-
-  
+// =====================
+// ⌨️ ENTER TO ADD TASK
+// =====================
+document.getElementById("floating-input").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    document.querySelector(".btn-success").click();
+  }
+});
