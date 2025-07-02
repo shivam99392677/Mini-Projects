@@ -131,8 +131,45 @@ document.addEventListener("click", (event) => {
 // =====================
 // ⌨️ ENTER TO ADD TASK
 // =====================
-document.getElementById("floating-input").addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    document.querySelector(".btn-success").click();
+document
+  .getElementById("floating-input")
+  .addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      document.querySelector(".btn-success").click();
+    }
+  });
+
+  
+// =====================
+// ⌨️ FILTER TASK ACCORDING TO CHECKBOX
+// =====================
+
+let btns = document.querySelectorAll(" li button");
+for (btn of btns) {
+  if (btn.classList.contains("allItem")) {
+    btn.addEventListener("click", () => {
+      for (li of ul.querySelectorAll("li")) {
+        li.style.display = "flex";
+      }
+    });
+  } else if (btn.classList.contains("active")) {
+    btn.addEventListener("click", () => {
+      for (li of ul.querySelectorAll("li")) {
+        if (li.querySelector("p").classList.contains("complete")) {
+          li.style.display = "none";
+        }
+      }
+    });
+  } else if (btn.classList.contains("done")) {
+    btn.addEventListener("click", () => {
+      for (li of ul.querySelectorAll("li")) {
+        let para = li.querySelector("p");
+        if (para.classList.contains("complete")) {
+          li.style.display = "flex";
+        } else {
+          li.style.display = "none";
+        }
+      }
+    });
   }
-});
+}
