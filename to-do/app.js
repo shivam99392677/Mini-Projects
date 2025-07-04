@@ -1,7 +1,6 @@
 // =====================
 // 📦 ELEMENT REFERENCES
 // =====================
-
 let btn = document.querySelector(".btn-success");
 let input = document.querySelector(".form-control");
 let ul = document.querySelector(".list-group");
@@ -12,10 +11,6 @@ let tasks = [];
 // =====================
 btn.addEventListener("click", () => {
   if (input.value != "") {
-    let cancelBtn = document.createElement("button");
-    //  SAVING TASKS TO LOCAL STORAGE
-  tasks.push({ text: input.value, complete: false });
-  localStorage.setItem("tasks", JSON.stringify(tasks));
     addTask(input.value);
   } else {
     alert("Please enter any task to add.");
@@ -25,13 +20,11 @@ btn.addEventListener("click", () => {
 // =====================
 // ✅ FUNCTION: Add Task
 // =====================
-function addTask(task) {
+function addTask(task, status, taskId = Date.now(),isFromStorage = false) {
   let li = document.createElement("li");
   let para = document.createElement("p");
   let check = document.createElement("input");
   let i = document.createElement("i");
-
-  
 
   check.type = "checkbox";
   check.classList.add("form-check-input");
@@ -43,25 +36,38 @@ function addTask(task) {
     enableEditing(para);
   });
 
+  // APPLYING STATUS LOADED FROM LOCAL STORAGE
+  if (status) {
+    check.checked = true;
+    para.classList.add("complete");
+  }
+
+  li.setAttribute("data-id", taskId);
   li.appendChild(check);
   li.appendChild(para);
   li.appendChild(i);
   ul.prepend(li);
   input.value = "";
 
+  // SAVING TASK TO TASKS[] IF NEW
+  const exists = tasks.some((t) => t.id == taskId);
+  if (!isFromStorage) {
+    tasks.push({ id: taskId, text: task, complete: !!status });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
   // ✅ Checkbox toggle
   check.addEventListener("change", function () {
+    const id = parseInt(li.getAttribute("data-id"));
+    let taskObj = tasks.find((t) => t.id === id);
     if (check.checked) {
       para.classList.add("complete");
-      for (let task of tasks) {
-        if (task.text === para.innerText) {
-          task.complete = true;
-        }
-      }
-      localStorage.setItem("tasks", JSON.stringify(tasks));
+      if (taskObj) taskObj.complete = true;
     } else {
       para.classList.remove("complete");
+      if (taskObj) taskObj.complete = false;
     }
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   });
 }
 
@@ -107,28 +113,27 @@ function saveEditedTask(input, saveBtn) {
   if (newText == "") {
     alert("Task cannot be empty!");
     return;
-  }
-
-  //ADDING TO LOCAL STORAGE
-  for (let task of tasks) {
-    if (task.text === input.defaultValue) {
-      task.text = newText;
+  } else {
+    const parent = input.parentNode;
+    const id = parseInt(parent.getAttribute("data-id"));
+    let taskObj = tasks.find((t) => t.id === id);
+    if (taskObj) {
+      taskObj.text = newText;
+      localStorage.setItem("tasks", JSON.stringify(tasks));
     }
+
+    let para = document.createElement("p");
+    para.innerText = newText;
+    para.classList.add("task-text");
+
+    para.addEventListener("dblclick", function () {
+      enableEditing(para);
+    });
+
+    parent.insertBefore(para, input);
+    parent.removeChild(input);
+    parent.removeChild(saveBtn);
   }
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  let para = document.createElement("p");
-  para.innerText = newText;
-  para.classList.add("task-text");
-
-  para.addEventListener("dblclick", function () {
-    enableEditing(para);
-  });
-
-  let parent = input.parentNode;
-  parent.insertBefore(para, input);
-  parent.removeChild(input);
-  parent.removeChild(saveBtn);
 }
 
 // =====================
@@ -139,10 +144,10 @@ document.addEventListener("click", (event) => {
     let confirmation = confirm("Do you want to Delete task?");
     if (confirmation) {
       let taskItem = event.target.parentElement;
+      const id = parseInt(taskItem.getAttribute("data-id"));
 
-      // UPDATING THE LOCAL STORAGE
-      let para = taskItem.querySelector("p");
-      tasks = tasks.filter((task) => task.text !== para.innerText);
+      // UPDATE LOCAL STORAGE
+      tasks = tasks.filter((task) => task.id !== id);
       localStorage.setItem("tasks", JSON.stringify(tasks));
 
       let bin = document.querySelector(".bin");
@@ -204,13 +209,12 @@ for (btn of btns) {
 // ⌨️ LOAD THE TASKS ON PAGE RELOAD
 // =====================
 
-window.addEventListener("DOMContentLoaded", ()=>{
+window.addEventListener("DOMContentLoaded", () => {
   let savedTask = JSON.parse(localStorage.getItem("tasks"));
-  if(savedTask){
+  if (savedTask) {
     tasks = savedTask;
-    for(let task of tasks){
-      addTask(task.text);
+    for (let task of tasks) {
+      addTask(task.text, task.complete, task.id,true);
     }
   }
-})
-
+});
