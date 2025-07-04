@@ -1,9 +1,11 @@
 // =====================
 // 📦 ELEMENT REFERENCES
 // =====================
+
 let btn = document.querySelector(".btn-success");
 let input = document.querySelector(".form-control");
 let ul = document.querySelector(".list-group");
+let tasks = [];
 
 // =====================
 // 🟩 ADD TASK ON BUTTON CLICK
@@ -11,6 +13,9 @@ let ul = document.querySelector(".list-group");
 btn.addEventListener("click", () => {
   if (input.value != "") {
     let cancelBtn = document.createElement("button");
+    //  SAVING TASKS TO LOCAL STORAGE
+  tasks.push({ text: input.value, complete: false });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
     addTask(input.value);
   } else {
     alert("Please enter any task to add.");
@@ -25,6 +30,8 @@ function addTask(task) {
   let para = document.createElement("p");
   let check = document.createElement("input");
   let i = document.createElement("i");
+
+  
 
   check.type = "checkbox";
   check.classList.add("form-check-input");
@@ -46,6 +53,12 @@ function addTask(task) {
   check.addEventListener("change", function () {
     if (check.checked) {
       para.classList.add("complete");
+      for (let task of tasks) {
+        if (task.text === para.innerText) {
+          task.complete = true;
+        }
+      }
+      localStorage.setItem("tasks", JSON.stringify(tasks));
     } else {
       para.classList.remove("complete");
     }
@@ -96,6 +109,14 @@ function saveEditedTask(input, saveBtn) {
     return;
   }
 
+  //ADDING TO LOCAL STORAGE
+  for (let task of tasks) {
+    if (task.text === input.defaultValue) {
+      task.text = newText;
+    }
+  }
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
   let para = document.createElement("p");
   para.innerText = newText;
   para.classList.add("task-text");
@@ -118,6 +139,12 @@ document.addEventListener("click", (event) => {
     let confirmation = confirm("Do you want to Delete task?");
     if (confirmation) {
       let taskItem = event.target.parentElement;
+
+      // UPDATING THE LOCAL STORAGE
+      let para = taskItem.querySelector("p");
+      tasks = tasks.filter((task) => task.text !== para.innerText);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+
       let bin = document.querySelector(".bin");
       event.target.remove();
       taskItem.remove();
@@ -139,7 +166,6 @@ document
     }
   });
 
-  
 // =====================
 // ⌨️ FILTER TASK ACCORDING TO CHECKBOX
 // =====================
@@ -173,3 +199,18 @@ for (btn of btns) {
     });
   }
 }
+
+// =====================
+// ⌨️ LOAD THE TASKS ON PAGE RELOAD
+// =====================
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  let savedTask = JSON.parse(localStorage.getItem("tasks"));
+  if(savedTask){
+    tasks = savedTask;
+    for(let task of tasks){
+      addTask(task.text);
+    }
+  }
+})
+
