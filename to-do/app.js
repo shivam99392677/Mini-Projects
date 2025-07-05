@@ -28,14 +28,15 @@ function attachCheckboxHandler(check,para,taskId){
     }else{
       para.classList.remove("complete");
     }
-  })
-
+    
   for(let task of tasks){
     if(task.id == taskId){
       task.complete = check.checked;
     }
   }
   localStorage.setItem("tasks",JSON.stringify(tasks));
+  })
+
 }
 
 // =====================
