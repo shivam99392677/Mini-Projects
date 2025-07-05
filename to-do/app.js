@@ -18,6 +18,27 @@ btn.addEventListener("click", () => {
 });
 
 // =====================
+// ✅ FUNCTION: check box toggle logic
+// =====================
+
+function attachCheckboxHandler(check,para,taskId){
+  check.addEventListener("change",()=>{
+    if(check.checked){
+      para.classList.add("complete");
+    }else{
+      para.classList.remove("complete");
+    }
+  })
+
+  for(let task of tasks){
+    if(task.id == taskId){
+      task.complete = check.checked;
+    }
+  }
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+}
+
+// =====================
 // ✅ FUNCTION: Add Task
 // =====================
 function addTask(task, status, taskId = Date.now(),isFromStorage = false) {
@@ -57,18 +78,7 @@ function addTask(task, status, taskId = Date.now(),isFromStorage = false) {
   }
 
   // ✅ Checkbox toggle
-  check.addEventListener("change", function () {
-    const id = parseInt(li.getAttribute("data-id"));
-    let taskObj = tasks.find((t) => t.id === id);
-    if (check.checked) {
-      para.classList.add("complete");
-      if (taskObj) taskObj.complete = true;
-    } else {
-      para.classList.remove("complete");
-      if (taskObj) taskObj.complete = false;
-    }
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  });
+ attachCheckboxHandler(check,para,taskId);
 }
 
 // =====================
@@ -133,6 +143,10 @@ function saveEditedTask(input, saveBtn) {
     parent.insertBefore(para, input);
     parent.removeChild(input);
     parent.removeChild(saveBtn);
+
+    let check = parent.querySelector("input[type='checkbox']");
+    let taskId = parent.getAttribute("data-id");
+    attachCheckboxHandler(check,para,taskId);
   }
 }
 
