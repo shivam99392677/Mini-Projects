@@ -5,6 +5,13 @@ let btn = document.querySelector(".btn-success");
 let input = document.querySelector(".form-control");
 let ul = document.querySelector(".list-group");
 let tasks = [];
+let labels = [
+  { label: "Work", color: "blue" },
+  { label: "Personal", color: "green" },
+  { label: "Urgent", color: "red" },
+  { label: "Study", color: "orange" },
+];
+let lableDropDown ;
 
 // =====================
 // 🟩 ADD TASK ON BUTTON CLICK
@@ -18,31 +25,41 @@ btn.addEventListener("click", () => {
 });
 
 // =====================
+// SHOW THE LEBEL DORPDOWN
+// =====================
+
+input.addEventListener("focus",()=>{
+  if(lableDropDown) return;
+
+  lableDropDown = document.createElement("select");
+  lableDropDown.classList.add()
+})
+
+// =====================
 // ✅ FUNCTION: check box toggle logic
 // =====================
 
-function attachCheckboxHandler(check,para,taskId){
-  check.addEventListener("change",()=>{
-    if(check.checked){
+function attachCheckboxHandler(check, para, taskId) {
+  check.addEventListener("change", () => {
+    if (check.checked) {
       para.classList.add("complete");
-    }else{
+    } else {
       para.classList.remove("complete");
     }
-    
-  for(let task of tasks){
-    if(task.id == taskId){
-      task.complete = check.checked;
-    }
-  }
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-  })
 
+    for (let task of tasks) {
+      if (task.id == taskId) {
+        task.complete = check.checked;
+      }
+    }
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  });
 }
 
 // =====================
 // ✅ FUNCTION: Add Task
 // =====================
-function addTask(task, status, taskId = Date.now(),isFromStorage = false) {
+function addTask(task, status, taskId = Date.now(), isFromStorage = false) {
   let li = document.createElement("li");
   let para = document.createElement("p");
   let check = document.createElement("input");
@@ -79,7 +96,7 @@ function addTask(task, status, taskId = Date.now(),isFromStorage = false) {
   }
 
   // ✅ Checkbox toggle
- attachCheckboxHandler(check,para,taskId);
+  attachCheckboxHandler(check, para, taskId);
 }
 
 // =====================
@@ -147,7 +164,7 @@ function saveEditedTask(input, saveBtn) {
 
     let check = parent.querySelector("input[type='checkbox']");
     let taskId = parent.getAttribute("data-id");
-    attachCheckboxHandler(check,para,taskId);
+    attachCheckboxHandler(check, para, taskId);
   }
 }
 
@@ -229,7 +246,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (savedTask) {
     tasks = savedTask;
     for (let task of tasks) {
-      addTask(task.text, task.complete, task.id,true);
+      addTask(task.text, task.complete, task.id, true);
     }
   }
 });
