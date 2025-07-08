@@ -2,7 +2,7 @@
 // 📦 ELEMENT REFERENCES
 // =====================
 let btn = document.querySelector(".btn-success");
-let input = document.querySelector(".form-control");
+let input = document.querySelector("#floating-input");
 let ul = document.querySelector(".list-group");
 let tasks = [];
 let labels = [
@@ -11,7 +11,6 @@ let labels = [
   { label: "Urgent", color: "red" },
   { label: "Study", color: "orange" },
 ];
-let lableDropDown ;
 
 // =====================
 // 🟩 ADD TASK ON BUTTON CLICK
@@ -25,15 +24,33 @@ btn.addEventListener("click", () => {
 });
 
 // =====================
+// ⌨️ ENTER TO ADD TASK
+// =====================
+
+
+input.addEventListener("keydown",(e)=>{
+  if(e.key === "Enter"){
+    btn.click();
+  }
+});
+
+// =====================
 // SHOW THE LEBEL DORPDOWN
 // =====================
 
-input.addEventListener("focus",()=>{
-  if(lableDropDown) return;
+let dropDown = document.getElementById("labelDropdown");
+let selectedLabel = null;
 
-  lableDropDown = document.createElement("select");
-  lableDropDown.classList.add()
-})
+input.addEventListener("focus", () => {
+  dropDown.style.display = "inline";
+});
+//SHOW LABEL SELECTION
+dropDown.querySelectorAll(".label").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    selectedLabel = e.target.getAttribute("data-label");
+    dropDown.querySelector("button").innerText = selectedLabel;
+  });
+});
 
 // =====================
 // ✅ FUNCTION: check box toggle logic
@@ -59,7 +76,13 @@ function attachCheckboxHandler(check, para, taskId) {
 // =====================
 // ✅ FUNCTION: Add Task
 // =====================
-function addTask(task, status, taskId = Date.now(), isFromStorage = false) {
+function addTask(
+  task,
+  status,
+  taskId = Date.now(),
+  isFromStorage = false,
+  label = selectedLabel
+) {
   let li = document.createElement("li");
   let para = document.createElement("p");
   let check = document.createElement("input");
@@ -74,6 +97,36 @@ function addTask(task, status, taskId = Date.now(), isFromStorage = false) {
   para.addEventListener("dblclick", function () {
     enableEditing(para);
   });
+  // ADDING LABEL
+  if (label) {
+    let badge = document.createElement("span");
+    badge.classList.add("badge", "ms-2", "rounded-pill");
+
+    switch (label) {
+      case "Work": {
+        badge.classList.add("bg-primary");
+        break;
+      }
+      case "Personal": {
+        badge.classList.add("bg-success");
+        break;
+      }
+      case "Urgent": {
+        badge.classList.add("bg-danger");
+        break;
+      }
+      case "Study": {
+        badge.classList.add("bg-warning", "text-dark");
+        break;
+      }
+      default: {
+        badge.classList.add("bg-secondary");
+      }
+    }
+
+    badge.innerText = label;
+    para.appendChild(badge);
+  }
 
   // APPLYING STATUS LOADED FROM LOCAL STORAGE
   if (status) {
@@ -91,9 +144,19 @@ function addTask(task, status, taskId = Date.now(), isFromStorage = false) {
   // SAVING TASK TO TASKS[] IF NEW
   const exists = tasks.some((t) => t.id == taskId);
   if (!isFromStorage) {
-    tasks.push({ id: taskId, text: task, complete: !!status });
+    tasks.push({
+      id: taskId,
+      text: task,
+      complete: !!status,
+      label: selectedLabel,
+    });
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }
+
+  // //HIDE THE LABEL DROPDOWN
+  selectedLabel = null;
+  dropDown.style.display = "none";
+  dropDown.querySelector("button").innerText = "Select Label";
 
   // ✅ Checkbox toggle
   attachCheckboxHandler(check, para, taskId);
@@ -103,7 +166,7 @@ function addTask(task, status, taskId = Date.now(), isFromStorage = false) {
 // ✏️ FUNCTION: Enable Editing
 // =====================
 function enableEditing(para) {
-  const currentText = para.textContent;
+  const currentText = para.childNodes[0].nodeValue.trim();
   let input = document.createElement("input");
   input.type = "text";
   input.value = currentText;
@@ -154,6 +217,32 @@ function saveEditedTask(input, saveBtn) {
     para.innerText = newText;
     para.classList.add("task-text");
 
+    // 🟨 Re-add badge if the task has a label
+    if (taskObj && taskObj.label) {
+      let badge = document.createElement("span");
+      badge.classList.add("badge", "ms-2", "rounded-pill");
+
+      switch (taskObj.label) {
+        case "Work":
+          badge.classList.add("bg-primary");
+          break;
+        case "Personal":
+          badge.classList.add("bg-success");
+          break;
+        case "Urgent":
+          badge.classList.add("bg-danger");
+          break;
+        case "Study":
+          badge.classList.add("bg-warning", "text-dark");
+          break;
+        default:
+          badge.classList.add("bg-secondary");
+      }
+
+      badge.innerText = taskObj.label;
+      para.appendChild(badge);
+    }
+
     para.addEventListener("dblclick", function () {
       enableEditing(para);
     });
@@ -191,17 +280,6 @@ document.addEventListener("click", (event) => {
     }
   }
 });
-
-// =====================
-// ⌨️ ENTER TO ADD TASK
-// =====================
-document
-  .getElementById("floating-input")
-  .addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      document.querySelector(".btn-success").click();
-    }
-  });
 
 // =====================
 // ⌨️ FILTER TASK ACCORDING TO CHECKBOX
@@ -246,7 +324,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (savedTask) {
     tasks = savedTask;
     for (let task of tasks) {
-      addTask(task.text, task.complete, task.id, true);
+      addTask(task.text, task.complete, task.id, true, task.label);
     }
   }
 });
