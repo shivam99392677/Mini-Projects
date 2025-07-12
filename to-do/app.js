@@ -27,12 +27,13 @@ btn.addEventListener("click", () => {
 // ⌨️ ENTER TO ADD TASK
 // =====================
 
-
 input.addEventListener("keydown",(e)=>{
   if(e.key === "Enter"){
+    e.preventDefault();
     btn.click();
   }
 });
+
 
 // =====================
 // SHOW THE LEBEL DORPDOWN
@@ -293,7 +294,7 @@ for (btn of btns) {
         li.style.display = "flex";
       }
     });
-  } else if (btn.classList.contains("active")) {
+  } else if (btn.classList.contains("running")) {
     btn.addEventListener("click", () => {
       for (li of ul.querySelectorAll("li")) {
         if (li.querySelector("p").classList.contains("complete")) {

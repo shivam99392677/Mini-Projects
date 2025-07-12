@@ -66,3 +66,7 @@ ul li i:hover{
 .content::-webkit-scrollbar-track{
     width: 8px;
 }
+form{
+    display: flex;
+    gap: 20px;
+}
