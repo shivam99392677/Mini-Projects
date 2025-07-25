@@ -29,42 +29,44 @@
     <div class="container-fluid">
       <h2>To-Do</h2>
       <form onsubmit="return false">
-      <input
-        type="text"
-        id="floating-input"
-        class="form-control"
-        placeholder="Enter task"
-      />
+        <input
+          type="text"
+          id="floating-input"
+          class="form-control"
+          placeholder="Enter task"
+        />
 
-      <div class="dropdown mt-2" id="labelDropdown" style="display: none">
-        <button
-          class="btn btn-outline-primary dropdown-toggle"
-          type="button"
-          data-bs-toggle="dropdown"
-        >
-          Select Label
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a class="dropdown-item label" href="#" data-label="Work">Work</a>
-          </li>
-          <li>
-            <a class="dropdown-item label" href="#" data-label="Personal"
-              >Personal</a
-            >
-          </li>
-          <li>
-            <a class="dropdown-item label" href="#" data-label="Urgent"
-              >Urgent</a
-            >
-          </li>
-          <li>
-            <a class="dropdown-item label" href="#" data-label="Study">Study</a>
-          </li>
-        </ul>
-      </div>
-      <button class="btn btn-success" type="button">Add</button>
-</form>
+        <div class="dropdown mt-2" id="labelDropdown" style="display: none">
+          <button
+            class="btn btn-outline-primary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            Select Label
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item label" href="#" data-label="Work">Work</a>
+            </li>
+            <li>
+              <a class="dropdown-item label" href="#" data-label="Personal"
+                >Personal</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item label" href="#" data-label="Urgent"
+                >Urgent</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item label" href="#" data-label="Study"
+                >Study</a
+              >
+            </li>
+          </ul>
+        </div>
+        <button class="btn btn-success" type="button">Add</button>
+      </form>
       <div class="dropdown">
         <h4>Pending Tasks:</h4>
         <button
@@ -77,18 +79,50 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="filterDropdown">
           <li>
-            <button class="dropdown-item allItem" type="button">
+            <button class="dropdown-item allItem filter" type="button">
               All Tasks
             </button>
           </li>
           <li>
-            <button class="dropdown-item running" type="button">Active</button>
+            <button class="dropdown-item running filter" type="button">
+              Active
+            </button>
           </li>
           <li>
-            <button class="dropdown-item done" type="button">Completed</button>
+            <button class="dropdown-item done filter" type="button">
+              Completed
+            </button>
           </li>
           <li><hr class="dropdown-divider" /></li>
         </ul>
+        <button
+          type="button"
+          class="btn btn-outline-primary filter"
+          data-label="work"
+        >
+          Work
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-success filter"
+          data-label="personal"
+        >
+          Personal
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger filter"
+          data-label="urgent"
+        >
+          Urgent
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-warning filter"
+          data-label="study"
+        >
+          Study
+        </button>
       </div>
 
       <div class="content">

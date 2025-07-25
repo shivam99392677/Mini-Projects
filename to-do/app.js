@@ -286,7 +286,7 @@ document.addEventListener("click", (event) => {
 // ⌨️ FILTER TASK ACCORDING TO CHECKBOX
 // =====================
 
-let btns = document.querySelectorAll(" li button");
+let btns = document.querySelectorAll(".filter");
 for (btn of btns) {
   if (btn.classList.contains("allItem")) {
     btn.addEventListener("click", () => {
@@ -313,6 +313,47 @@ for (btn of btns) {
         }
       }
     });
+  }
+  else if(btn.innerText == "Work"){
+    btn.addEventListener("click",()=>{
+      for(li of ul.querySelectorAll("li")){
+        let para = li.querySelector("p");
+        let span = para.querySelector("span");
+        if(span.innerText != "Work"){
+          li.style.display = "none";
+        }
+      }
+    })
+  }else if(btn.innerText == "Personal"){
+    btn.addEventListener("click",()=>{
+      for(li of ul.querySelectorAll("li")){
+        let para = li.querySelector("p");
+        let span = para.querySelector("span");
+        if(span.innerText != "Personal"){
+          li.style.display = "none";
+        }
+      }
+    })
+  }else if(btn.innerText == "Urgent"){
+    btn.addEventListener("click",()=>{
+      for(li of ul.querySelectorAll("li")){
+        let para = li.querySelector("p");
+        let span = para.querySelector("span");
+        if(span.innerText != "Urgent"){
+          li.style.display = "none";
+        }
+      }
+    })
+  }else if(btn.innerText == "Study"){
+    btn.addEventListener("click",()=>{
+      for(li of ul.querySelectorAll("li")){
+        let para = li.querySelector("p");
+        let span = para.querySelector("span");
+        if(span.innerText != "Study"){
+          li.style.display = "none";
+        }
+      }
+    })
   }
 }
 
